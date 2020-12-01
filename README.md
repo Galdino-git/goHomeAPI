@@ -6,7 +6,7 @@
 
 3. Ao executar, você deverá ver as duas mensagens de log, tanto a de porta quanto de conexão.
 
-4. Para exportar a sua porta local, caso deseje, precisa rodar o ngrok também. Além da janela com a conexão ao banco, abra uma janela e digite 'ngrok http `porta`'. Deverá aparecer dois links, use o primeiro na URI do arquivo './api/goHomeApi.js como baseURL.
+4. Para exportar a sua porta local, caso deseje, precisa rodar o ngrok também. Além da janela com a conexão ao banco, abra uma janela e digite 'ngrok http `porta`'. Deverá aparecer dois links, use o primeiro na URI do arquivo './api/goHomeApi.js' (da aplicação) como baseURL.
 
 5. Caso não possua conta no ngrok, você terá que reiniciar o ngrok a cada 8 horas. A conta é gratuita, basta criar e pegar o authtoken e, antes de iniciar o ngrok, digitar: 'ngrok authtoken `authtoken`'.
 

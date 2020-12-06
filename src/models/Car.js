@@ -24,7 +24,6 @@ const carSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Profile",
       required: true,
-      unique: true,
     },
   },
   { timestamps: true }

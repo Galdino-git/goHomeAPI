@@ -1,17 +1,23 @@
 require("./models/User");
 require("./models/Profile");
+require("./models/Secret_Question");
+require("./models/Car");
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const authRoutes = require("./routes/authRoutes");
+const loginRoutes = require("./routes/loginRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const carRoutes = require("./routes/carRoutes");
+const secretQuestionRoutes = require("./routes/secretQuestionRoutes");
 const requireAuth = require("./middleware/requireAuth");
 
 const app = express();
 
 app.use(bodyParser.json());
-app.use(authRoutes);
+app.use(loginRoutes);
 app.use(profileRoutes);
+app.use(secretQuestionRoutes);
+app.use(carRoutes);
 
 const mongoUri = `mongodb+srv://sysDBA:${encodeURIComponent(
   "!#homeDBA#!"

@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const Profile = mongoose.model("Profile");
 const User = mongoose.model("User");
+const Car = mongoose.model("Car");
 
 const router = express.Router();
 
@@ -20,9 +21,6 @@ router.post("/profile/create", async (req, res) => {
   } = req.body;
 
   try {
-    const data = new Date();
-    const _TZ_Teste = data.getTimezoneOffset();
-
     const profile = new Profile({
       name,
       birthdate,
@@ -32,21 +30,15 @@ router.post("/profile/create", async (req, res) => {
       is_Driver,
       rating,
       cnh,
-      data,
-      _TZ_Teste,
     });
 
     await profile.save();
 
-    var tempoCerto = new Date(
-      profile.data.getTime() - profile._TZ_Teste * 60000
-    );
     res.send({
       profile,
-      tempoCerto,
     });
   } catch (erro) {
-    return res.status(422).send(erro.message);
+    return res.status(422).send({ erro: erro.message });
   }
 });
 
@@ -65,6 +57,21 @@ router.get("/profile/getByEmail", async (req, res) => {
     res.send({ profile });
   } catch (erro) {
     return res.status(404).send({ erro: "Perfil não encontrado!" });
+  }
+});
+
+router.get("/profile/getCarsbyProfileId", async (req, res) => {
+  try {
+    const { _id_Profile } = req.body;
+    const car = await Car.find({ _id_Profile });
+
+    if (!car) {
+      return res.status(404).send({ erro: "Nenhum carro encontrado!" });
+    }
+
+    res.send({ car });
+  } catch (erro) {
+    return res.status(404).send({ erro: "Nenhum carro encontrado!" });
   }
 });
 

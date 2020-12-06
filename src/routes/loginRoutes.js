@@ -8,8 +8,20 @@ const router = express.Router();
 router.post("/signup", async (req, res) => {
   //Cadastrar
   try {
-    const { email, password, id_perfil } = req.body;
-    const user = new User({ email, password, id_perfil });
+    const {
+      email,
+      password,
+      _id_Secret_Question,
+      secret_Answer,
+      _id_Profile,
+    } = req.body;
+    const user = new User({
+      email,
+      password,
+      _id_Secret_Question,
+      secret_Answer,
+      _id_Profile,
+    });
     await user.save();
 
     const token = jwt.sign({ userId: user._id }, "GO_HOME_TCC");

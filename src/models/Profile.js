@@ -33,7 +33,6 @@ const profileSchema = new mongoose.Schema(
     },
     cnh: {
       type: Number,
-      unique: true,
     },
   },
   {

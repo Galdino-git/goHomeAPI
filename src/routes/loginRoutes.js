@@ -99,9 +99,23 @@ router.get("/user/recover", async (req, res) => {
     }
     //const token = jwt.sign({ userId: user._id }, "GO_HOME_TCC");
     const token = user._id;
-    res.send(user);
+    res.send({ user });
   } catch (error) {
     return res.send(error.message);
+  }
+});
+
+router.get("/user/get", async (req, res) => {
+  const { _id } = req.body;
+
+  try {
+    const user = await User.findById({ _id: _id }).catch((error) =>
+      console.log(error.message)
+    );
+
+    res.send({ user });
+  } catch (error) {
+    return res.status(404).send({ erro: erro.message });
   }
 });
 

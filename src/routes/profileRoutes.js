@@ -41,7 +41,8 @@ router.post("/profile/create", async (req, res) => {
 router.get("/profile/getByUserId", async (req, res) => {
   const { _id } = req.body;
 
-  const user = await User.findById({ _id: _id }).catch((error) =>
+  console.log(_id);
+  const user = await User.findById({ _id }).catch((error) =>
     console.log(error.message)
   );
 

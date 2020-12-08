@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const User = mongoose.model("User");
+const Profile = mongoose.model("Profile");
+const Car = mongoose.model("Car");
 
 const router = express.Router();
 
@@ -46,11 +48,15 @@ router.post("/signin", async (req, res) => {
     return res.status(404).send({ erro: "Email ou senha inválidos." });
   }
 
+  const profile = await Profile.findById({ _id: user._id_Profile });
+
+  const car = await Car.findOne({ _id_Profile: profile._id });
+
   try {
     //const token = jwt.sign({ userId: user._id }, "GO_HOME_TCC");
     const token = user._id;
 
-    res.send({ token });
+    res.send({ token: token, profile: profile, user: user, car: car });
   } catch (erro) {
     return res.status(401).send({ erro: "Email ou senha inválidos." });
   }
@@ -97,6 +103,18 @@ router.get("/user/recover", async (req, res) => {
   } catch (error) {
     return res.send(error.message);
   }
+});
+
+router.patch("/user/update", async (req, res) => {
+  const {
+    email,
+    password,
+    _id_Secret_Question,
+    secret_Answer,
+    _id_Profile,
+  } = req.body;
+
+  const user = await User.findOneAndUpdate({});
 });
 
 router.patch("/user/updatePassword", async (req, res) => {

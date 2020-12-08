@@ -45,8 +45,8 @@ mongoose.connection.on("error", (err) => {
   console.log("Error connecting do mongo", err);
 });
 
-app.get("/", requireAuth, (req, res) => {
-  res.send(`Você está logado como: ${req.user.email}`);
+app.get("/", (req, res) => {
+  res.send("Olá Gustavo!");
 });
 
 app.listen(3010, () => {

@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const User = mongoose.model("User");
-const Profile = mongoose.model("Profile");
 
 const router = express.Router();
 
@@ -48,13 +47,10 @@ router.post("/signin", async (req, res) => {
   }
 
   try {
-    const profile = await Profile.findById({ _id: user._id_Profile });
-
     //const token = jwt.sign({ userId: user._id }, "GO_HOME_TCC");
     const token = user._id;
-    const photoUri = profile.photo;
 
-    res.send({ token, photoUri });
+    res.send({ token });
   } catch (erro) {
     return res.status(401).send({ erro: "Email ou senha inválidos." });
   }

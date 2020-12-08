@@ -41,22 +41,21 @@ router.post("/profile/create", async (req, res) => {
 router.get("/profile/getByUserId", async (req, res) => {
   const { _id } = req.body;
 
-  const user = await User.findById({ _id }).catch((error) =>
+  const user = await User.findById({ _id: _id }).catch((error) =>
     console.log(error.message)
   );
 
-  console.log(user);
   if (!user) {
     return res.status(404).send({ erro: "Perfil não encontrado!" });
   }
-  const profile = await Profile.findOne({ _id: user._id_Profile });
+  const profile = await Profile.findById({ _id: user._id_Profile });
   if (!profile) {
     return res.status(404).send({ erro: "Perfil não encontrado!" });
   }
   try {
-    res.send({ profile });
+    res.send(profile);
   } catch (erro) {
-    return res.status(404).send({ erro: "Perfil não encontrado!" });
+    return res.status(404).send({ erro: erro.message });
   }
 });
 

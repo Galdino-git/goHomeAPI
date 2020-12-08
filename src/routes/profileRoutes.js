@@ -1,32 +1,25 @@
 const express = require("express");
-const multer = require("multer");
 const mongoose = require("mongoose");
-const { v4: uuidv4 } = require("uuid");
 const Profile = mongoose.model("Profile");
 const User = mongoose.model("User");
 const Car = mongoose.model("Car");
 
-const Storage = multer.diskStorage({
-  destination(req, file, callback) {
-    callback(null, "./images/");
-  },
-  filename: (req, file, callback) => {
-    const fileName = file.originalname.toLowerCase().split(" ").join("-");
-    callback(null, uuidv4() + "-" + fileName);
-  },
-});
-
-const upload = multer({ Storage: Storage });
-
 const router = express.Router();
 
-router.post(
-  "/profile/create",
-  upload.single("photo"),
-  async (req, res, next) => {
-    const url = req.protocol + "://" + req.get("host");
+router.post("/profile/create", async (req, res) => {
+  const {
+    name,
+    birthdate,
+    cpf,
+    photo,
+    telephone,
+    is_Driver,
+    rating,
+    cnh,
+  } = req.body;
 
-    const {
+  try {
+    const profile = new Profile({
       name,
       birthdate,
       cpf,
@@ -35,28 +28,15 @@ router.post(
       is_Driver,
       rating,
       cnh,
-    } = req.body;
+    });
 
-    try {
-      const profile = new Profile({
-        name,
-        birthdate,
-        cpf,
-        photo: url + "/images/" + req.file.filename,
-        telephone,
-        is_Driver,
-        rating,
-        cnh,
-      });
+    await profile.save();
 
-      await profile.save();
-
-      res.send({ profile });
-    } catch (erro) {
-      return res.status(422).send({ erro: erro.message });
-    }
+    res.send({ profile });
+  } catch (erro) {
+    return res.status(422).send({ erro: erro.message });
   }
-);
+});
 
 router.get("/profile/getByUserId", async (req, res) => {
   const { _id } = req.body;

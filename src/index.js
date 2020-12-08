@@ -3,6 +3,7 @@ require("./models/Profile");
 require("./models/Secret_Question");
 require("./models/Car");
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const loginRoutes = require("./routes/loginRoutes");
@@ -14,6 +15,12 @@ const requireAuth = require("./middleware/requireAuth");
 const app = express();
 
 app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: false,
+  })
+);
+app.use(cors());
 app.use(loginRoutes);
 app.use(profileRoutes);
 app.use(secretQuestionRoutes);
@@ -30,7 +37,8 @@ mongoose.connect(mongoUri, {
 });
 
 mongoose.connection.on("connected", () => {
-  console.log("CONECTADO");
+  const date = new Date();
+  console.log("Conectado: " + date.toString());
 });
 
 mongoose.connection.on("error", (err) => {

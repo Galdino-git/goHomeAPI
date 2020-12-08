@@ -1,27 +1,32 @@
 const express = require("express");
+const multer = require("multer");
 const mongoose = require("mongoose");
+const { v4: uuidv4 } = require("uuid");
 const Profile = mongoose.model("Profile");
 const User = mongoose.model("User");
 const Car = mongoose.model("Car");
 
+const Storage = multer.diskStorage({
+  destination(req, file, callback) {
+    callback(null, "./images/");
+  },
+  filename: (req, file, callback) => {
+    const fileName = file.originalname.toLowerCase().split(" ").join("-");
+    callback(null, uuidv4() + "-" + fileName);
+  },
+});
+
+const upload = multer({ Storage: Storage });
+
 const router = express.Router();
 
-router.post("/profile/create", async (req, res) => {
-  //Cadastrar
+router.post(
+  "/profile/create",
+  upload.single("photo"),
+  async (req, res, next) => {
+    const url = req.protocol + "://" + req.get("host");
 
-  const {
-    name,
-    birthdate,
-    cpf,
-    photo,
-    telephone,
-    is_Driver,
-    rating,
-    cnh,
-  } = req.body;
-
-  try {
-    const profile = new Profile({
+    const {
       name,
       birthdate,
       cpf,
@@ -30,26 +35,41 @@ router.post("/profile/create", async (req, res) => {
       is_Driver,
       rating,
       cnh,
-    });
+    } = req.body;
 
-    await profile.save();
+    try {
+      const profile = new Profile({
+        name,
+        birthdate,
+        cpf,
+        photo: url + "/images/" + req.file.filename,
+        telephone,
+        is_Driver,
+        rating,
+        cnh,
+      });
 
-    res.send({
-      profile,
-    });
-  } catch (erro) {
-    return res.status(422).send({ erro: erro.message });
+      await profile.save();
+
+      res.send({ profile });
+    } catch (erro) {
+      return res.status(422).send({ erro: erro.message });
+    }
   }
-});
+);
 
-router.get("/profile/getByEmail", async (req, res) => {
-  const { email } = req.body;
+router.get("/profile/getByUserId", async (req, res) => {
+  const { _id } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findById({ _id }).catch((error) =>
+    console.log(error.message)
+  );
+
+  console.log(user);
   if (!user) {
     return res.status(404).send({ erro: "Perfil não encontrado!" });
   }
-  const profile = await Profile.findOne({ _id: user.id_perfil });
+  const profile = await Profile.findOne({ _id: user._id_Profile });
   if (!profile) {
     return res.status(404).send({ erro: "Perfil não encontrado!" });
   }
